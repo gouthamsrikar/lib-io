@@ -10,12 +10,12 @@ app = Flask(__name__)
 
 try:
     mongo = pymongo.MongoClient(
-        "")
+        "mongodb+srv://<user>:<password>@cluster0.<>.mongodb.net/?retryWrites=true&w=majority")
     db = mongo.library
     mongo.server_info()
 
 except Exception as ex:
-    #print(ex)
+    print(ex)
     print("ERROR-cannot connect to mongodb")
 
 ###############################################################################
@@ -35,7 +35,7 @@ def create_book():
         return dumps(cursor)
 
     except Exception as ex:
-        #print(ex)
+        print(ex)
         return Response(status=400)
 
 
@@ -48,7 +48,7 @@ def get_all_books():
         return dumps(dbResponse)
 
     except Exception as ex:
-        #print(ex)
+        print(ex)
         return Response(status=500)
 
 
@@ -128,28 +128,34 @@ def return_book():
         map = {
             "book_name": request.form["book_name"],
             "person_name": request.form["person_name"],
-            "return_date": None
+            "return_date":{"$exists":False}
         }
 
         updateMap = {
             "$set": {"return_date": datetime.strptime(request.form["return_date"], '%Y/%m/%d').timestamp()}
         }
 
-        updateTransactionResult = db.transactions.update_one(map, updateMap)
+
         transactionCursor = db.transactions.find_one(
-            {"_id": updateTransactionResult.upserted_id})
+           map,{})
+
+        updateTransactionResult = db.transactions.update_one(map, updateMap)
+
+        
         bookCursor = db.books.find_one(
             {"book_name": request.form["book_name"]})
-
-        days=datetime.fromtimestamp(transactionCursor.get("return_date"))-datetime.fromtimestamp(transactionCursor.get("issue_date"))
         
 
-        total_rent = bookCursor.get("rent")*days 
+        days=datetime.strptime(request.form["return_date"], '%Y/%m/%d')-datetime.fromtimestamp(transactionCursor.get("issue_date"))
+        
+
+        total_rent = bookCursor.get("rent")*days.days
+       
 
         return dumps({"total_rent":total_rent})
 
     except Exception as ex:
-        #print(ex)
+        print(ex)
         return Response(status=400)
 
 
@@ -161,24 +167,25 @@ def transactions_filterbydate():
     try:
         from_date = request.args.get('from_date')
         to_date = request.args.get('to_date')
-        #print(from_date)
-        #print(to_date)
+        print(from_date)
+        print(to_date)
         query = {}
 
         if (from_date != None and to_date != None):
-            query["issue_date"] = {"$gte": datetime.strptime(request.form["from_date"], '%Y/%m/%d').timestamp(
-            ), "$lte": datetime.strptime(request.form["to_date"], '%Y/%m/%d').timestamp()}
+            print("working fine")
+            query["issue_date"] = {"$gte": datetime.strptime(request.args.get('from_date'), '%Y/%m/%d').timestamp(
+            ), "$lte": datetime.strptime(request.args.get('to_date'), '%Y/%m/%d').timestamp()}
 
-            # dbResponse = db.transactions.find(
-            # query, {"_id": 0,})
+            dbResponse = db.transactions.find(
+            query, {"_id": 0,"issue_date":0,"return_date":0})
 
-            return dumps(query)
+            return dumps(dbResponse)
 
         else:
             return Response(status=400)
 
     except Exception as ex:
-        #print(ex)
+        print(ex)
         return Response(status=400)
 
 
@@ -267,11 +274,12 @@ def transactions_rentbybook():
             return Response(status=400)
 
     except Exception as ex:
-        #print(ex)
+        print(ex)
         return Response(status=400)
 
 
 ###############################################################################
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(port=5000, debug=False)
+
