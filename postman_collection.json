@@ -1,0 +1,285 @@
+{
+	"info": {
+		"_postman_id": "c0cf72ff-713b-47ec-8a33-a22bcb4afefd",
+		"name": "library",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22900382"
+	},
+	"item": [
+		{
+			"name": "book transactions",
+			"item": [
+				{
+					"name": "book issue",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "book_name",
+									"value": "book2",
+									"type": "text"
+								},
+								{
+									"key": "person_name",
+									"value": "person name",
+									"type": "text"
+								},
+								{
+									"key": "issue_date",
+									"value": "2021/09/17",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/issue",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"issue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "book return",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "book_name",
+									"value": "book2",
+									"type": "text"
+								},
+								{
+									"key": "person_name",
+									"value": "person name",
+									"type": "text"
+								},
+								{
+									"key": "return_date",
+									"value": "2021/09/30",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/return",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"return"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "books",
+			"item": [
+				{
+					"name": "create book",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"book_name\": \"bookserve1\",\n            \"category\": \"category\",\n            \"rent\": 10\n}\n            ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/book",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/search/books?book_name_or_term=book1&category=category9&from_rent=10&to_rent=30",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"search",
+								"books"
+							],
+							"query": [
+								{
+									"key": "book_name_or_term",
+									"value": "book1"
+								},
+								{
+									"key": "category",
+									"value": "category9"
+								},
+								{
+									"key": "from_rent",
+									"value": "10"
+								},
+								{
+									"key": "to_rent",
+									"value": "30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/book",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"book"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "transactions filter",
+			"item": [
+				{
+					"name": "transations by date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://library-backend-007.herokuapp.com/transactions/filter/bydate?from_date=2020/01/01&to_date=2023/09/30",
+							"protocol": "https",
+							"host": [
+								"library-backend-007",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"transactions",
+								"filter",
+								"bydate"
+							],
+							"query": [
+								{
+									"key": "from_date",
+									"value": "2020/01/01"
+								},
+								{
+									"key": "to_date",
+									"value": "2023/09/30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transactions by person name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/transactions/filter/bypersonname?person_name=per1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"transactions",
+								"filter",
+								"bypersonname"
+							],
+							"query": [
+								{
+									"key": "person_name",
+									"value": "per1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transactions by book name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/transactions/filter/bybookname?book_name=book2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"transactions",
+								"filter",
+								"bybookname"
+							],
+							"query": [
+								{
+									"key": "book_name",
+									"value": "book2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rent generated by book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/transactions/filter/rentbybook?book_name=book2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"transactions",
+								"filter",
+								"rentbybook"
+							],
+							"query": [
+								{
+									"key": "book_name",
+									"value": "book2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

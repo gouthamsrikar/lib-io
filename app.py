@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 try:
     mongo = pymongo.MongoClient(
-        "mongodb+srv://<user>:<password>@cluster0.<>.mongodb.net/?retryWrites=true&w=majority")
+        "mongodb+srv://<>:<>@cluster0.<>.mongodb.net/?retryWrites=true&w=majority")
     db = mongo.library
     mongo.server_info()
 
@@ -72,11 +72,15 @@ def search_book():
             query["category"] = category
 
         if (from_rent != None and to_rent != None):
-            query["rent"] = {"$gte": from_rent, "$lte": to_rent}
+            query["rent"] = {"$gte": float(from_rent), "$lte": float(to_rent)}
 
         dbResponse = db.books.find(query, {"_id": 0})
 
-        return dumps(dbResponse)
+        if(dbResponse==None):
+            return Response(status=400)
+        else :
+            return dumps(dbResponse)
+
 
     except Exception as ex:
         #print(ex)
@@ -115,7 +119,7 @@ def issue_book():
         
 
     except Exception as ex:
-        #print(ex)
+        print(ex)
         return Response(status=500)
 
 
